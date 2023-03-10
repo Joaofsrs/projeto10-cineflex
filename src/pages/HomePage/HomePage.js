@@ -23,13 +23,13 @@ export default function HomePage() {
             <ListContainer>
                 {filmes.map((filme) => {
                     return (
-                        <Link  key={filme.id} to={`/sessoes/${filme.id}"`} >
+                        <Link  key={filme.id} to={`/sessoes/${filme.id}`} >
                             <MovieContainer>
                                 <img src={filme.posterURL} alt="poster" />
                             </MovieContainer>
                         </Link>
-                    );
-                })};
+                    )
+                })}
             </ListContainer>
 
         </PageContainer>

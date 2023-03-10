@@ -1,47 +1,62 @@
-import styled from "styled-components"
+import styled from "styled-components";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react"
 
 export default function SessionsPage() {
+    const { idFilme } = useParams();
+    const [sessoes, setSessoes] = useState([]);
 
-    return (
-        <PageContainer>
-            Selecione o horário
-            <div>
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
+    useEffect(() => {
+        const requisicao = axios.get(
+            `https://mock-api.driven.com.br/api/v8/cineflex/movies/${idFilme}/showtimes`
+        );
+        requisicao.then((resposta) => {
+            setSessoes(resposta.data)
+        })
 
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
-
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
-            </div>
-
-            <FooterContainer>
+    }, []);
+    if (sessoes === [] || sessoes.days === undefined) {
+        return (
+            <PageContainer>
+                Carregando...
+            </PageContainer>
+        );
+    } else {
+        return (
+            <PageContainer>
+                Selecione o horário
                 <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                    {sessoes.days.map((sessao) => {
+                        return (
+                            <SessionContainer key={sessao.id}>
+                                {`${sessao.weekday} - ${sessao.date}`}
+                                <ButtonsContainer>
+                                    {sessao.showtimes.map((horario) => {
+                                        return (    
+                                            <Link key={horario.id} to={`/assentos/${horario.id}`} >
+                                                <button key={horario.id}>{`${horario.name}`}</button>
+                                            </Link>
+                                        )
+                                    })}
+                                </ButtonsContainer>
+                            </SessionContainer>
+                        )
+                    })}
                 </div>
-                <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                </div>
-            </FooterContainer>
 
-        </PageContainer>
-    )
+                <FooterContainer>
+                    <div>
+                        <img src={sessoes.posterURL} alt="poster" />
+                    </div>
+                    <div>
+                        <p>{sessoes.title}</p>
+                    </div>
+                </FooterContainer>
+
+            </PageContainer>
+        )
+    }
 }
 
 const PageContainer = styled.div`
@@ -56,26 +71,6 @@ const PageContainer = styled.div`
     padding-top: 70px;
     div {
         margin-top: 20px;
-    }
-`
-const SessionContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    font-family: 'Roboto';
-    font-size: 20px;
-    color: #293845;
-    padding: 0 20px;
-`
-const ButtonsContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    margin: 20px 0;
-    button {
-        margin-right: 20px;
-    }
-    a {
-        text-decoration: none;
     }
 `
 const FooterContainer = styled.div`
@@ -114,5 +109,25 @@ const FooterContainer = styled.div`
                 margin-top: 10px;
             }
         }
+    }
+`
+const SessionContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-family: 'Roboto';
+    font-size: 20px;
+    color: #293845;
+    padding: 0 20px;
+`
+const ButtonsContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin: 20px 0;
+    button {
+        margin-right: 20px;
+    }
+    a {
+        text-decoration: none;
     }
 `
