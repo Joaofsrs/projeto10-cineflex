@@ -1,30 +1,39 @@
-import styled from "styled-components"
+import styled from "styled-components";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom"
+import axios from "axios";
 
 export default function HomePage() {
+    const [filmes, setFilmes] = useState([]);
+
+
+    useEffect(() => {
+        const requisicao = axios.get(
+            `https://mock-api.driven.com.br/api/v8/cineflex/movies`
+        );
+        requisicao.then((resposta) => {
+            setFilmes(resposta.data);
+        });
+    }, []);
+
     return (
         <PageContainer>
             Selecione o filme
 
             <ListContainer>
-                <MovieContainer>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster"/>
-                </MovieContainer>
-
-                <MovieContainer>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster"/>
-                </MovieContainer>
-
-                <MovieContainer>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster"/>
-                </MovieContainer>
-
-                <MovieContainer>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster"/>
-                </MovieContainer>
+                {filmes.map((filme) => {
+                    return (
+                        <Link  key={filme.id} to={`/sessoes/${filme.id}"`} >
+                            <MovieContainer>
+                                <img src={filme.posterURL} alt="poster" />
+                            </MovieContainer>
+                        </Link>
+                    );
+                })};
             </ListContainer>
 
         </PageContainer>
-    )
+    );
 }
 
 const PageContainer = styled.div`
