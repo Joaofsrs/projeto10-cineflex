@@ -25,7 +25,6 @@ export default function SeatsPage() {
 
     function finalizarCompra(evento) {
         evento.preventDefault()
-        console.log("passou")
         if(cadeiraSelecionada.length > 0 && cpf !== 0 && name !== ""){
             const ids = cadeiraSelecionada;
             const dados = {ids, name, cpf};
@@ -83,16 +82,16 @@ export default function SeatsPage() {
                 <FormContainer>
                     <form onSubmit={finalizarCompra} >
                         Nome do Comprador:
-                        <input type="text" onChange={e => setNome(e.target.value)} placeholder="Digite seu nome..." />
+                        <input data-test="client-name" type="text" onChange={e => setNome(e.target.value)} placeholder="Digite seu nome..." />
 
                         CPF do Comprador:
-                        <input type="number" onChange={e => setCPF(e.target.value)} placeholder="Digite seu CPF..." />
+                        <input data-test="client-cpf" type="number" onChange={e => setCPF(e.target.value)} placeholder="Digite seu CPF..." />
 
-                        <button type="submit" >Reservar Assento(s)</button>
+                        <button data-test="book-seat-btn" type="submit" >Reservar Assento(s)</button>
                     </form>
                 </FormContainer>
 
-                <FooterContainer>
+                <FooterContainer data-test="footer" >
                     <div>
                         <img src={cadeirasSessao.movie.posterURL} alt="poster" />
                     </div>

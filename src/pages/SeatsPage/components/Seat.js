@@ -26,7 +26,7 @@ export default function Seat(props) {
 
     return (
         <>
-            <SeatItem cor={cor} corBorda={corBorda} onClick={selecionaCadeira}>{props.name}</SeatItem>
+            <SeatItem data-test="seat" cor={cor} corBorda={corBorda} onClick={selecionaCadeira}>{props.name}</SeatItem>
         </>
     );
 }
