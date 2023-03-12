@@ -8,6 +8,7 @@ export default function SeatsPage() {
     const { idSessao } = useParams();
     const [cadeirasSessao, setCadeiras] = useState([]);
     const [cadeiraSelecionada, setSelecionada] = useState([]);
+    const [numeroCadeiraSelecionada, setNumero] = useState([]);
     const [name, setNome] = useState("");
     const [cpf, setCPF] = useState(0);
     const [post, setPost] = useState(null);
@@ -30,7 +31,14 @@ export default function SeatsPage() {
             const dados = {ids, name, cpf};
             const requisicao = axios.post('https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many', dados);
             requisicao.then((resposta) => {
-                navigate("/sucesso")
+                navigate("/sucesso", {state:{ 
+                    hour: cadeirasSessao.name,
+                    date: cadeirasSessao.day.date,
+                    title: cadeirasSessao.movie.title,
+                    seats: numeroCadeiraSelecionada,
+                    name: name,
+                    cpf: cpf
+                }})
             });
             requisicao.catch((resposta) => {
                 alert("erro no envio")
@@ -53,7 +61,7 @@ export default function SeatsPage() {
 
                 <SeatsContainer>
                     {cadeirasSessao.seats.map((cadeira) =>
-                        <Seat key={cadeira.id} setSelecionada={setSelecionada} cadeiraSelecionada={cadeiraSelecionada} id={cadeira.id} name={cadeira.name} isAvailable={cadeira.isAvailable} />
+                        <Seat key={cadeira.id} setNumero={setNumero} numeroCadeiraSelecionada={numeroCadeiraSelecionada} setSelecionada={setSelecionada} cadeiraSelecionada={cadeiraSelecionada} id={cadeira.id} name={cadeira.name} isAvailable={cadeira.isAvailable} />
                     )}
                 </SeatsContainer>
 

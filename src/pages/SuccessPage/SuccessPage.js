@@ -1,6 +1,15 @@
+import { Link, useLocation } from "react-router-dom"
 import styled from "styled-components"
 
 export default function SuccessPage() {
+    const location = useLocation();
+    const name = location.state.name;
+    const cpf = location.state.cpf;
+    const title = location.state.title;
+    const hour = location.state.hour;
+    const date = location.state.date;
+    const seats = location.state.seats;
+
 
     return (
         <PageContainer>
@@ -8,24 +17,24 @@ export default function SuccessPage() {
 
             <TextContainer>
                 <strong><p>Filme e sessão</p></strong>
-                <p>Tudo em todo lugar ao mesmo tempo</p>
-                <p>03/03/2023 - 14:00</p>
+                <p>{title}</p>
+                <p>{date} - {hour}</p>
             </TextContainer>
 
             <TextContainer>
                 <strong><p>Ingressos</p></strong>
-                <p>Assento 01</p>
-                <p>Assento 02</p>
-                <p>Assento 03</p>
+                {seats.map((seat) => <p>Assento {seat}</p>)}
             </TextContainer>
 
             <TextContainer>
                 <strong><p>Comprador</p></strong>
-                <p>Nome: Letícia Chijo</p>
-                <p>CPF: 123.456.789-10</p>
+                <p>Nome: {name}</p>
+                <p>CPF: {cpf}</p>
             </TextContainer>
 
-            <button>Voltar para Home</button>
+            <Link to="/">
+                <button>Voltar para Home</button>
+            </Link>
         </PageContainer>
     )
 }

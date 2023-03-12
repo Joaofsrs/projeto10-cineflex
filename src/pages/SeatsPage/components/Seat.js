@@ -19,6 +19,8 @@ export default function Seat(props) {
             setBorda("#0E7D71");
             const novaCadeira = [...props.cadeiraSelecionada, props.id];
             props.setSelecionada(novaCadeira);
+            const novoNumero = [...props.numeroCadeiraSelecionada, props.name];
+            props.setNumero(novoNumero);
         }
     }
 
