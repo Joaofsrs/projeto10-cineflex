@@ -1,56 +1,102 @@
+import { useState, useEffect } from "react"
 import styled from "styled-components"
+import axios from "axios"
+import { Link, useParams, useNavigate } from "react-router-dom"
+import Seat from "./components/Seat"
 
 export default function SeatsPage() {
+    const { idSessao } = useParams();
+    const [cadeirasSessao, setCadeiras] = useState([]);
+    const [cadeiraSelecionada, setSelecionada] = useState([]);
+    const [name, setNome] = useState("");
+    const [cpf, setCPF] = useState(0);
+    const [post, setPost] = useState(null);
+    const navigate = useNavigate();
+    useEffect(() => {
+        const requisicao = axios.get(
+            `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`
+        );
 
-    return (
-        <PageContainer>
-            Selecione o(s) assento(s)
+        requisicao.then((resposta) => {
+            setCadeiras(resposta.data);
+        });
+    }, []);
 
-            <SeatsContainer>
-                <SeatItem>01</SeatItem>
-                <SeatItem>02</SeatItem>
-                <SeatItem>03</SeatItem>
-                <SeatItem>04</SeatItem>
-                <SeatItem>05</SeatItem>
-            </SeatsContainer>
+    function finalizarCompra(evento) {
+        evento.preventDefault()
+        console.log("passou")
+        if(cadeiraSelecionada.length > 0 && cpf !== 0 && name !== ""){
+            const ids = cadeiraSelecionada;
+            const dados = {ids, name, cpf};
+            const requisicao = axios.post('https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many', dados);
+            requisicao.then((resposta) => {
+                navigate("/sucesso")
+            });
+            requisicao.catch((resposta) => {
+                alert("erro no envio")
+            });
+        }else{
+            alert("Falta algum dado");
+        }
+    }
 
-            <CaptionContainer>
-                <CaptionItem>
-                    <CaptionCircle />
-                    Selecionado
-                </CaptionItem>
-                <CaptionItem>
-                    <CaptionCircle />
-                    Disponível
-                </CaptionItem>
-                <CaptionItem>
-                    <CaptionCircle />
-                    Indisponível
-                </CaptionItem>
-            </CaptionContainer>
+    if (cadeirasSessao === [] || cadeirasSessao.day === undefined) {
+        return (
+            <PageContainer>
+                Carregando...
+            </PageContainer>
+        );
+    } else {
+        return (
+            <PageContainer>
+                Selecione o(s) assento(s)
 
-            <FormContainer>
-                Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
+                <SeatsContainer>
+                    {cadeirasSessao.seats.map((cadeira) =>
+                        <Seat key={cadeira.id} setSelecionada={setSelecionada} cadeiraSelecionada={cadeiraSelecionada} id={cadeira.id} name={cadeira.name} isAvailable={cadeira.isAvailable} />
+                    )}
+                </SeatsContainer>
 
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
+                <CaptionContainer>
+                    <CaptionItem>
+                        <CaptionCircle cor="#1AAE9E" corBorda="#0E7D71" />
+                        Selecionado
+                    </CaptionItem>
+                    <CaptionItem>
+                        <CaptionCircle cor="#C3CFD9" corBorda="#7B8B99" />
+                        Disponível
+                    </CaptionItem>
+                    <CaptionItem>
+                        <CaptionCircle cor="#FBE192" corBorda="#F7C52B" />
+                        Indisponível
+                    </CaptionItem>
+                </CaptionContainer>
 
-                <button>Reservar Assento(s)</button>
-            </FormContainer>
+                <FormContainer>
+                    <form onSubmit={finalizarCompra} >
+                        Nome do Comprador:
+                        <input type="text" onChange={e => setNome(e.target.value)} placeholder="Digite seu nome..." />
 
-            <FooterContainer>
-                <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
-                </div>
-                <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                    <p>Sexta - 14h00</p>
-                </div>
-            </FooterContainer>
+                        CPF do Comprador:
+                        <input type="number" onChange={e => setCPF(e.target.value)} placeholder="Digite seu CPF..." />
 
-        </PageContainer>
-    )
+                        <button type="submit" >Reservar Assento(s)</button>
+                    </form>
+                </FormContainer>
+
+                <FooterContainer>
+                    <div>
+                        <img src={cadeirasSessao.movie.posterURL} alt="poster" />
+                    </div>
+                    <div>
+                        <p>{`${cadeirasSessao.movie.title}`}</p>
+                        <p>{`${cadeirasSessao.day.weekday} - ${cadeirasSessao.day.date}`}</p>
+                    </div>
+                </FooterContainer>
+
+            </PageContainer>
+        )
+    }
 }
 
 const PageContainer = styled.div`
@@ -96,8 +142,8 @@ const CaptionContainer = styled.div`
     margin: 20px;
 `
 const CaptionCircle = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
+    border: 1px solid ${(props) => props.corBorda};
+    background-color: ${(props) => props.cor};
     height: 25px;
     width: 25px;
     border-radius: 25px;
@@ -111,19 +157,6 @@ const CaptionItem = styled.div`
     flex-direction: column;
     align-items: center;
     font-size: 12px;
-`
-const SeatItem = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
-    height: 25px;
-    width: 25px;
-    border-radius: 25px;
-    font-family: 'Roboto';
-    font-size: 11px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 5px 3px;
 `
 const FooterContainer = styled.div`
     width: 100%;
