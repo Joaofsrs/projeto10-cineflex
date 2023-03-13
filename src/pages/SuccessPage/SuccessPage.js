@@ -21,7 +21,7 @@ export default function SuccessPage() {
                 <p>{date} - {hour}</p>
             </TextContainer>
 
-            <TextContainer data-test="seat-info">
+            <TextContainer data-test="seats-info">
                 <strong><p>Ingressos</p></strong>
                 {seats.map((seat) => <p>Assento {seat}</p>)}
             </TextContainer>
