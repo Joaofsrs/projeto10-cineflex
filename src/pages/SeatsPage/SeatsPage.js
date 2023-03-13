@@ -82,12 +82,12 @@ export default function SeatsPage() {
                 <FormContainer>
                     <form onSubmit={finalizarCompra} >
                         Nome do Comprador:
-                        <input data-test="client-name" type="text" onChange={e => setNome(e.target.value)} placeholder="Digite seu nome..." />
+                        <input type="text" data-test="client-name" onChange={e => setNome(e.target.value)} placeholder="Digite seu nome..." />
 
                         CPF do Comprador:
-                        <input data-test="client-cpf" type="number" onChange={e => setCPF(e.target.value)} placeholder="Digite seu CPF..." />
+                        <input type="number" data-test="client-cpf" onChange={e => setCPF(e.target.value)} placeholder="Digite seu CPF..." />
 
-                        <button data-test="book-seat-btn" type="submit" >Reservar Assento(s)</button>
+                        <button type="submit" data-test="book-seat-btn" >Reservar Assento(s)</button>
                     </form>
                 </FormContainer>
 
@@ -97,7 +97,7 @@ export default function SeatsPage() {
                     </div>
                     <div>
                         <p>{`${cadeirasSessao.movie.title}`}</p>
-                        <p>{`${cadeirasSessao.day.weekday} - ${cadeirasSessao.day.date}`}</p>
+                        <p>{`${cadeirasSessao.day.weekday} - ${cadeirasSessao.name}`}</p>
                     </div>
                 </FooterContainer>
 

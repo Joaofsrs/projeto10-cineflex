@@ -21,6 +21,8 @@ export default function Seat(props) {
             props.setSelecionada(novaCadeira);
             const novoNumero = [...props.numeroCadeiraSelecionada, props.name];
             props.setNumero(novoNumero);
+        }else{
+            alert("assento indisponivel");
         }
     }
 
