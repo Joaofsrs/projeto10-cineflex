@@ -10,7 +10,7 @@ export default function SeatsPage() {
     const [cadeiraSelecionada, setSelecionada] = useState([]);
     const [numeroCadeiraSelecionada, setNumero] = useState([]);
     const [name, setNome] = useState("");
-    const [cpf, setCPF] = useState(0);
+    const [cpf, setCPF] = useState("");
     const [post, setPost] = useState(null);
     const navigate = useNavigate();
     useEffect(() => {
@@ -25,7 +25,7 @@ export default function SeatsPage() {
 
     function finalizarCompra(evento) {
         evento.preventDefault()
-        if(cadeiraSelecionada.length > 0 && cpf !== 0 && name !== ""){
+        if(cadeiraSelecionada.length > 0 && cpf !== "" && name !== ""){
             const ids = cadeiraSelecionada;
             const dados = {ids, name, cpf};
             const requisicao = axios.post('https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many', dados);
